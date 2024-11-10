@@ -25,9 +25,17 @@ export class PostsService {
   }
 
   // Find post by id
-  async getPostById(id: number) {
-    const post = await this.postRepo.findOne({ where: { id: id } });
-    return { post: post };
+  async getPostById(id: number): Promise<PostEntity> {
+    const post = await this.postRepo.findOne({
+      where: { id },
+      relations: ['comments', 'likes'], // Load the related comments
+      select: ['id', 'title', 'body'],
+      loadRelationIds: false,
+    });
+    if (!post) {
+      throw new Error('Post not found');
+    }
+    return post;
   }
 
   // Delete post by id
