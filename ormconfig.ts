@@ -4,11 +4,11 @@ dotenv.config();
 
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
-  host: 'localhost',
-  port: 5432,
-  username: 'postgres',
+  host: process.env.DB_HOST,
+  port: parseInt(process.env.PORT) || 5432,
+  username: process.env.DB_USERNAME,
   password: '',
-  database: 'blog-db',
+  database: process.env.DB_NAME,
   // entities: [Episode],
   //   autoLoadEntities: true,
   synchronize: true, // todo: not safe for production and we should use migrations instead
