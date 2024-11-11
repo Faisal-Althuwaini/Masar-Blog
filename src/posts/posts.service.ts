@@ -7,6 +7,9 @@ import { PostEntity } from './entities/post.entity';
 import { Like } from '../likes/like.entity';
 import { Comment } from '../comments/comment.entity';
 import { User } from '../users/entities/user.entity';
+import { UserDto } from '@src/users/dto/user.dto';
+import { CommentDto } from '@src/comments/dto/comment.dto';
+import { LikeDto } from '@src/likes/dto/like.dto';
 
 @Injectable()
 export class PostsService {
@@ -21,6 +24,7 @@ export class PostsService {
   // comments repo
   commentRepo = this.dataSource.getRepository(Comment);
 
+  // Create post
   async create(createPostDto: CreatePostDto, userId: number) {
     const post = new PostEntity();
 
@@ -45,27 +49,48 @@ export class PostsService {
     const post = await this.postRepo.findOne({
       where: { id },
       relations: ['user', 'comments', 'comments.user', 'likes', 'likes.user'],
+      select: {
+        user: {
+          id: true,
+          email: true,
+          firstName: true,
+          lastName: true,
+        },
+        comments: {
+          content: true,
+          user: {
+            id: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
+        likes: {
+          id: true,
+          user: {
+            id: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
+      },
     });
 
     if (!post) {
       throw new HttpException('Post not found', HttpStatus.BAD_REQUEST);
     }
 
-    return {
-      id: post.id,
-      title: post.title,
-      body: post.body,
-      user: post.user,
-      comments: post.comments.map((comment) => ({
-        id: comment.id,
-        content: comment.content,
-        user: comment.user,
-      })),
-      likes: post.likes.map((like) => ({
-        id: like.id,
-        user: like.user,
-      })),
-    };
+    // Map the fetched data to DTOs
+    const postResponse = new PostResponseDto();
+    postResponse.id = post.id;
+    postResponse.title = post.title;
+    postResponse.body = post.body;
+    postResponse.user = new UserDto(post.user); // Map user to UserDto
+    postResponse.comments = post.comments.map(
+      (comment) => new CommentDto(comment),
+    ); // Map comments to CommentDto
+    postResponse.likes = post.likes.map((like) => new LikeDto(like)); // Map likes to LikeDto
+
+    return postResponse;
   }
 
   // Update Post
@@ -107,6 +132,7 @@ export class PostsService {
       user: updatedPost.user,
     };
   }
+
   // Delete post by id
   async deletePost(id: number, userId: number) {
     // Find the post by ID and include the user who created it
