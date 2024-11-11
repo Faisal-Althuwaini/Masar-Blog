@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { Like } from './like.entity';
 import { PostEntity } from '../posts/entities/post.entity';
@@ -11,15 +11,18 @@ export class LikesService {
   // Repository for LikeEntity
   private readonly likeRepo = this.dataSource.getRepository(Like);
 
-  // Method to add a like to  // Add a like to a post
-  async addLike(post: PostEntity, user: User): Promise<Like> {
+  async addLike(post: PostEntity, user: User) {
     // Check if the user has already liked the post
     const existingLike = await this.likeRepo.findOne({
-      where: { post: post, id: user.id },
+      where: { post: { id: post.id }, user: { id: user.id } },
+      relations: ['post', 'user'],
     });
 
     if (existingLike) {
-      throw new Error('You have already liked this post');
+      throw new HttpException(
+        'You have already liked this post',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     // Create a new like for the post
@@ -29,6 +32,7 @@ export class LikesService {
     });
 
     // Save the like
-    return this.likeRepo.save(newLike);
+    await this.likeRepo.save(newLike);
+    return { message: 'Like added successfully!' };
   }
 }

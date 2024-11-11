@@ -1,6 +1,4 @@
-import { UUID } from 'crypto';
-
 export type AccessTokenPayload = {
-  userId: UUID;
+  userId: number;
   email: string;
 };

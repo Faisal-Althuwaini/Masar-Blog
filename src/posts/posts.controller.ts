@@ -3,11 +3,12 @@ import {
   Get,
   Post,
   Body,
-  Patch,
+  Header,
   Param,
   Delete,
   UseGuards,
   Request,
+  Put,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -32,15 +33,25 @@ export class PostsController {
   postRepo = this.dataSource.getRepository(PostEntity);
 
   // Create a post
-  @Post()
   @UseGuards(JwtGuard) // This will ensure the user is logged in (ckeck if the user has jwt in headers)
-  create(@Body() body: string) {
-    return this.postsService.create(body);
+  @Post()
+  create(@Body() body: string, @Request() req) {
+    const userId = req.user.id; // Get logged-in user's ID
+    return this.postsService.create(body, userId);
+  }
+
+  // Edit a post
+  @UseGuards(JwtGuard)
+  @Put(':id')
+  async editPost(@Param('id') postId: number, @Body() body, @Request() req) {
+    const userId = req.user.id;
+    return this.postsService.updatePost(postId, body, userId);
   }
 
   // Get All posts
   @Public()
   @Get()
+  @Header('Content-Type', 'application/json') // Set Content-Type for outgoing response
   async findAll() {
     const posts = await this.postRepo.find();
     return { posts: posts };
@@ -48,14 +59,17 @@ export class PostsController {
 
   // Get Post by id
   @Get(':id')
+  @Header('Content-Type', 'application/json') // Set Content-Type for outgoing response
   findOne(@Param('id') id: number) {
     return this.postsService.getPostById(id);
   }
 
   // Delete post by id
+  @UseGuards(JwtGuard)
   @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.postsService.deletePost(id);
+  remove(@Param('id') postId: number, @Request() req) {
+    const userId = req.user.id; // Get logged-in user's ID
+    return this.postsService.deletePost(postId, userId);
   }
 
   // Add a comment to a post

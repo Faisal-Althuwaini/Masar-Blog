@@ -2,6 +2,7 @@ import { UUID } from 'crypto';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Comment } from 'src/comments/comment.entity';
 import { Like } from 'src/likes/like.entity';
+import { PostEntity } from 'src/posts/entities/post.entity';
 
 @Entity({ name: 'user' })
 export class User {
@@ -25,4 +26,7 @@ export class User {
 
   @OneToMany(() => Like, (like) => like.user)
   likes?: Like[];
+
+  @OneToMany(() => PostEntity, (post) => post.user)
+  posts: PostEntity[]; // Link back to the posts the user has created
 }
