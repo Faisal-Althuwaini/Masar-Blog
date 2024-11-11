@@ -6,6 +6,7 @@ import { PostEntity } from './entities/post.entity';
 import { Like } from '../likes/like.entity';
 import { Comment } from '../comments/comment.entity';
 import { User } from '../users/entities/user.entity';
+import { tr } from '@faker-js/faker/.';
 
 @Injectable()
 export class PostsService {
@@ -40,11 +41,17 @@ export class PostsService {
   async getPostById(id: number) {
     const post = await this.postRepo.findOne({
       where: { id },
-      relations: ['comments', 'comments.user', 'likes', 'likes.user'],
+      relations: ['user', 'comments', 'comments.user', 'likes', 'likes.user'],
       select: {
         id: true,
         title: true,
         body: true,
+        user: {
+          id: true,
+          email: true,
+          firstName: true,
+          lastName: true,
+        },
         comments: {
           content: true,
           user: {
