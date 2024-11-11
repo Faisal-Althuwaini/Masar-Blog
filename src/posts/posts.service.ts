@@ -1,12 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { PostResponseDto } from './dto/post-response.dto';
 import { DataSource } from 'typeorm';
 import { PostEntity } from './entities/post.entity';
 import { Like } from '../likes/like.entity';
 import { Comment } from '../comments/comment.entity';
 import { User } from '../users/entities/user.entity';
-import { tr } from '@faker-js/faker/.';
 
 @Injectable()
 export class PostsService {
@@ -21,20 +21,23 @@ export class PostsService {
   // comments repo
   commentRepo = this.dataSource.getRepository(Comment);
 
-  async create(bodyHandler, userId: number) {
+  async create(createPostDto: CreatePostDto, userId: number) {
     const post = new PostEntity();
-    const { title, body } = bodyHandler;
 
-    post.title = title;
-    post.body = body;
+    post.title = createPostDto.title;
+    post.body = createPostDto.body;
 
     // Associate the post with the user (userId)
     post.user = { id: userId } as User;
 
     // Save the post to the database
-    await this.postRepo.save(post);
+    const savedPost = await this.postRepo.save(post);
 
-    return { message: 'Post created successfully', title, body };
+    return {
+      message: 'Post created successfully',
+      title: savedPost.title,
+      body: savedPost.body,
+    };
   }
 
   // Find post by id
@@ -42,42 +45,35 @@ export class PostsService {
     const post = await this.postRepo.findOne({
       where: { id },
       relations: ['user', 'comments', 'comments.user', 'likes', 'likes.user'],
-      select: {
-        id: true,
-        title: true,
-        body: true,
-        user: {
-          id: true,
-          email: true,
-          firstName: true,
-          lastName: true,
-        },
-        comments: {
-          content: true,
-          user: {
-            id: true,
-            firstName: true,
-            lastName: true,
-          },
-        },
-        likes: {
-          id: true,
-          user: {
-            id: true,
-            firstName: true,
-            lastName: true,
-          },
-        },
-      },
     });
+
     if (!post) {
       throw new HttpException('Post not found', HttpStatus.BAD_REQUEST);
     }
-    return post;
+
+    return {
+      id: post.id,
+      title: post.title,
+      body: post.body,
+      user: post.user,
+      comments: post.comments.map((comment) => ({
+        id: comment.id,
+        content: comment.content,
+        user: comment.user,
+      })),
+      likes: post.likes.map((like) => ({
+        id: like.id,
+        user: like.user,
+      })),
+    };
   }
 
   // Update Post
-  async updatePost(postId: number, body, userId: number) {
+  async updatePost(
+    postId: number,
+    updatePostDto: UpdatePostDto,
+    userId: number,
+  ) {
     const post = await this.postRepo.findOne({
       where: { id: postId },
       relations: ['user'],
@@ -97,18 +93,18 @@ export class PostsService {
     }
 
     // Update the post fields
-    post.title = body.title;
-    post.body = body.body;
+    post.title = updatePostDto.title ?? post.title;
+    post.body = updatePostDto.body ?? post.body;
 
     // Save the updated post
-    await this.postRepo.save(post);
+    const updatedPost = await this.postRepo.save(post);
 
     return {
       message: 'Post updated successfully',
-      post: {
-        title: post.title,
-        body: post.body,
-      },
+      id: updatedPost.id,
+      title: updatedPost.title,
+      body: updatedPost.body,
+      user: updatedPost.user,
     };
   }
   // Delete post by id
