@@ -10,10 +10,15 @@ import { User } from '../users/entities/user.entity';
 import { UserDto } from '@src/users/dto/user.dto';
 import { CommentDto } from '@src/comments/dto/comment.dto';
 import { LikeDto } from '@src/likes/dto/like.dto';
+import { PageService } from '../filter/PageService';
+import { PaginationFilterDto } from '../filter/PaginationFilterDto';
 
 @Injectable()
-export class PostsService {
-  constructor(private readonly dataSource: DataSource) {}
+export class PostsService extends PageService<PostEntity> {
+  protected readonly dataSource: DataSource;
+  constructor(dataSource: DataSource) {
+    super(dataSource, PostEntity);
+  }
 
   // posts repo
   postRepo = this.dataSource.getRepository(PostEntity);
@@ -23,6 +28,19 @@ export class PostsService {
 
   // comments repo
   commentRepo = this.dataSource.getRepository(Comment);
+
+  async findAllPaginated(filter: PaginationFilterDto) {
+    const queryBuilder = this.getQueryBuilder('post');
+
+    // title filtering
+    if (filter.title) {
+      queryBuilder.where('post.title ILIKE :title', {
+        title: `%${filter.title}%`,
+      });
+    }
+
+    return this.paginate(filter, queryBuilder);
+  }
 
   // Create post
   async create(createPostDto: CreatePostDto, userId: number) {
