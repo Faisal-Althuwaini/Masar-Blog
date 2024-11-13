@@ -35,9 +35,9 @@ export class PostsController {
   // Create a post
   @UseGuards(JwtGuard) // This will ensure the user is logged in (ckeck if the user has jwt in headers)
   @Post()
-  create(@Body() body: string, @Request() req) {
+  create(@Body() createPostDto: CreatePostDto, @Request() req) {
     const userId = req.user.id; // Get logged-in user's ID
-    return this.postsService.create(body, userId);
+    return this.postsService.create(createPostDto, userId);
   }
 
   // Edit a post
@@ -81,7 +81,8 @@ export class PostsController {
     @Request() req, // Get the user from the request (assumes user is authenticated)
   ) {
     const post = await this.postsService.getPostById(postId); // Get the post by ID
-    return this.commentsService.addComment(post, req.user, text); // Call the addComment method in CommentsService
+    console.log(post);
+    return this.commentsService.addComment(post as PostEntity, req.user, text); // Call the addComment method in CommentsService
   }
 
   // Add a like to a post
@@ -92,6 +93,6 @@ export class PostsController {
     @Request() req, // Get the user from the request (assumes user is authenticated)
   ) {
     const post = await this.postsService.getPostById(postId); // Get the post by ID
-    return this.likesService.addLike(post, req.user); // Add the like
+    return this.likesService.addLike(post as PostEntity, req.user); // Add the like
   }
 }

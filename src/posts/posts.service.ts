@@ -1,12 +1,15 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { PostResponseDto } from './dto/post-response.dto';
 import { DataSource } from 'typeorm';
 import { PostEntity } from './entities/post.entity';
 import { Like } from '../likes/like.entity';
 import { Comment } from '../comments/comment.entity';
 import { User } from '../users/entities/user.entity';
-import { tr } from '@faker-js/faker/.';
+import { UserDto } from '@src/users/dto/user.dto';
+import { CommentDto } from '@src/comments/dto/comment.dto';
+import { LikeDto } from '@src/likes/dto/like.dto';
 
 @Injectable()
 export class PostsService {
@@ -21,20 +24,24 @@ export class PostsService {
   // comments repo
   commentRepo = this.dataSource.getRepository(Comment);
 
-  async create(bodyHandler, userId: number) {
+  // Create post
+  async create(createPostDto: CreatePostDto, userId: number) {
     const post = new PostEntity();
-    const { title, body } = bodyHandler;
 
-    post.title = title;
-    post.body = body;
+    post.title = createPostDto.title;
+    post.body = createPostDto.body;
 
     // Associate the post with the user (userId)
     post.user = { id: userId } as User;
 
     // Save the post to the database
-    await this.postRepo.save(post);
+    const savedPost = await this.postRepo.save(post);
 
-    return { message: 'Post created successfully', title, body };
+    return {
+      message: 'Post created successfully',
+      title: savedPost.title,
+      body: savedPost.body,
+    };
   }
 
   // Find post by id
@@ -43,9 +50,6 @@ export class PostsService {
       where: { id },
       relations: ['user', 'comments', 'comments.user', 'likes', 'likes.user'],
       select: {
-        id: true,
-        title: true,
-        body: true,
         user: {
           id: true,
           email: true,
@@ -70,14 +74,31 @@ export class PostsService {
         },
       },
     });
+
     if (!post) {
       throw new HttpException('Post not found', HttpStatus.BAD_REQUEST);
     }
-    return post;
+
+    // Map the fetched data to DTOs
+    const postResponse = new PostResponseDto();
+    postResponse.id = post.id;
+    postResponse.title = post.title;
+    postResponse.body = post.body;
+    postResponse.user = new UserDto(post.user); // Map user to UserDto
+    postResponse.comments = post.comments.map(
+      (comment) => new CommentDto(comment),
+    ); // Map comments to CommentDto
+    postResponse.likes = post.likes.map((like) => new LikeDto(like)); // Map likes to LikeDto
+
+    return postResponse;
   }
 
   // Update Post
-  async updatePost(postId: number, body, userId: number) {
+  async updatePost(
+    postId: number,
+    updatePostDto: UpdatePostDto,
+    userId: number,
+  ) {
     const post = await this.postRepo.findOne({
       where: { id: postId },
       relations: ['user'],
@@ -97,20 +118,21 @@ export class PostsService {
     }
 
     // Update the post fields
-    post.title = body.title;
-    post.body = body.body;
+    post.title = updatePostDto.title ?? post.title;
+    post.body = updatePostDto.body ?? post.body;
 
     // Save the updated post
-    await this.postRepo.save(post);
+    const updatedPost = await this.postRepo.save(post);
 
     return {
       message: 'Post updated successfully',
-      post: {
-        title: post.title,
-        body: post.body,
-      },
+      id: updatedPost.id,
+      title: updatedPost.title,
+      body: updatedPost.body,
+      user: updatedPost.user,
     };
   }
+
   // Delete post by id
   async deletePost(id: number, userId: number) {
     // Find the post by ID and include the user who created it
