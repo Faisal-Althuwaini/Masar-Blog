@@ -70,24 +70,20 @@ export class PostsService extends PageService<PostEntity> {
       select: {
         user: {
           id: true,
-          email: true,
-          firstName: true,
-          lastName: true,
+          username: true,
         },
         comments: {
           content: true,
           user: {
             id: true,
-            firstName: true,
-            lastName: true,
+            username: true,
           },
         },
         likes: {
           id: true,
           user: {
             id: true,
-            firstName: true,
-            lastName: true,
+            username: true,
           },
         },
       },

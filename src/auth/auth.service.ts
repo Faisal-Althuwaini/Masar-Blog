@@ -14,8 +14,8 @@ export class AuthService {
   ) {}
 
   // Method to validate user credentials during login
-  async validateUser(email: string, password: string): Promise<User> {
-    const user: User = await this.usersService.findOneByEmail(email); // Retrieve user by email
+  async validateUser(username: string, password: string): Promise<User> {
+    const user: User = await this.usersService.findOneByEmail(username); // Retrieve user by email
     if (!user) {
       // Check if user does not exist
       throw new BadRequestException('User not found');
@@ -29,17 +29,17 @@ export class AuthService {
 
   // Method to generate JWT token after successful login
   async login(user: User): Promise<AccessToken> {
-    const payload = { email: user.email, id: user.id }; // Prepare payload containing user info
+    const payload = { username: user.username, id: user.id }; // Prepare payload containing user info
     return { access_token: this.jwtService.sign(payload) }; // Return the JWT token with the payload
   }
 
   // Method to handle user registration
   async register(user: RegisterRequestDto): Promise<AccessToken> {
-    const existingUser = await this.usersService.findOneByEmail(user.email); // Check if user already exists
+    const existingUser = await this.usersService.findOneByEmail(user.username); // Check if user already exists
 
-    // If email already exists
+    // If username already exists
     if (existingUser) {
-      throw new BadRequestException('email already exists');
+      throw new BadRequestException('Username already exists');
     }
     const hashedPassword = await bcrypt.hash(user.password, 10); // Hash the password using bcrypt
     const newUser: User = { ...user, password: hashedPassword, posts: [] }; // Create new user object with hashed password
