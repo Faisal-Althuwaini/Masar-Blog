@@ -4,7 +4,7 @@ export class LikeDto {
   id: number;
   user: {
     id: number;
-    email: string;
+    username: string;
   };
 
   constructor(like: Like) {
