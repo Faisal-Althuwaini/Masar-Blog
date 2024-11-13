@@ -9,6 +9,7 @@ import {
   UseGuards,
   Request,
   Put,
+  Query,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -19,6 +20,7 @@ import { Public } from 'src/auth/decorators/public.decorator';
 import { JwtGuard } from '../auth/guards/jwt.guard'; // Adjust the import path as needed
 import { CommentsService } from 'src/comments/comments.service';
 import { LikesService } from 'src/likes/likes.service';
+import { PaginationFilterDto } from '@src/filter/PaginationFilterDto';
 
 @Controller('posts')
 export class PostsController {
@@ -52,9 +54,9 @@ export class PostsController {
   @Public()
   @Get()
   @Header('Content-Type', 'application/json') // Set Content-Type for outgoing response
-  async findAll() {
-    const posts = await this.postRepo.find();
-    return { posts: posts };
+  async findAll(@Query() filter: PaginationFilterDto) {
+    // const posts = await this.postRepo.find();
+    return this.postsService.findAllPaginated(filter);
   }
 
   // Get Post by id
