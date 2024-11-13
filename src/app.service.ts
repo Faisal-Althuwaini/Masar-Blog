@@ -22,7 +22,7 @@ export class AppService {
       const user = new User();
       user.firstName = faker.person.firstName();
       user.lastName = faker.person.lastName();
-      user.email = faker.internet.email();
+      user.username = faker.internet.username();
       user.password = faker.internet.password();
       users.push(user);
     }

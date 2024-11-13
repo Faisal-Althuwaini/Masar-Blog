@@ -10,8 +10,8 @@ export class UsersService {
   // repo global variable (DB)
   usersRepository = this.dataSource.getRepository(User);
 
-  findOneByEmail(email: string): Promise<User | null> {
-    return this.usersRepository.findOneBy({ email });
+  findOneByEmail(username: string): Promise<User | null> {
+    return this.usersRepository.findOneBy({ username });
   }
 
   findOneById(id: number): Promise<User | null> {

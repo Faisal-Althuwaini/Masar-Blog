@@ -83,7 +83,6 @@ export class PostsController {
     @Request() req, // Get the user from the request (assumes user is authenticated)
   ) {
     const post = await this.postsService.getPostById(postId); // Get the post by ID
-    console.log(post);
     return this.commentsService.addComment(post as PostEntity, req.user, text); // Call the addComment method in CommentsService
   }
 
