@@ -15,16 +15,16 @@ export class CommentsService {
   async addComment(post: PostEntity, user: User, text: string) {
     // Create the new comment instance
     const comment = this.commentRepo.create({
-      post,
+      post: post, // Ensure TypeScript understands post is a PostEntity
       user,
       content: text,
     });
-
     // Save the comment in the database
     await this.commentRepo.save(comment);
 
-    // Return a success message or the created comment (optional)
-    return { message: 'Comment added successfully', comment };
+    // Return a success message or the created comment
+
+    return { message: 'Comment added successfully' };
   }
 
   // Method to find comments for a post
