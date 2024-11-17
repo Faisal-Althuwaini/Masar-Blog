@@ -73,7 +73,7 @@ With Mau, you can deploy your application in just a few clicks, allowing you to 
 
 ## Database diagram
 
-[Database diagram](./mysystem.jpg)
+[Database diagram](mysystem.jpg)
 
 ## Resources
 
