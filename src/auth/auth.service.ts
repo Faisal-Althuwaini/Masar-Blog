@@ -42,7 +42,13 @@ export class AuthService {
       throw new BadRequestException('Username already exists');
     }
     const hashedPassword = await bcrypt.hash(user.password, 10); // Hash the password using bcrypt
-    const newUser: User = { ...user, password: hashedPassword, posts: [] }; // Create new user object with hashed password
+    const newUser: User = {
+      ...user,
+      password: hashedPassword,
+      posts: [],
+      following: [],
+      followers: [],
+    }; // Create new user object with hashed password
     await this.usersService.create(newUser); // Save the new user in the database
     return this.login(newUser); // Log the new user in and return an access token
   }
