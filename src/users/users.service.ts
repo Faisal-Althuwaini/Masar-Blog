@@ -76,4 +76,14 @@ export class UsersService {
   async unfollowUser(followerId, followingId) {
     return this.followsService.unfollowUser(followerId, followingId);
   }
+
+  async getUserByUsername(username: string) {
+    const user = await this.usersRepository.findOne({ where: { username } });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    return new UserDto(user);
+  }
 }

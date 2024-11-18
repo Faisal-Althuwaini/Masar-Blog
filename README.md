@@ -75,6 +75,19 @@ With Mau, you can deploy your application in just a few clicks, allowing you to 
 
 <img src="/mysystem.jpg" alt="My system"/>
 
+## Database indexing effect
+
+i made indexing for an endpoint /users/:username to search for a user by username, i used HASH indexing method.
+before the indexing :
+
+<img src="/before-index.jpg" alt="My system"/>
+
+after the indexing :
+
+<img src="/after-index.jpg" alt="My system"/>
+
+response time with users table of 700k rows, before index it was 157ms, after index it became 0.351ms !
+
 ## Resources
 
 Check out a few resources that may come in handy when working with NestJS:
