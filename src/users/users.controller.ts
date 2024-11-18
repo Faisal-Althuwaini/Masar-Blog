@@ -1,6 +1,15 @@
-import { Controller, Post, Get, Param, Req, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Param,
+  Req,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserDto } from './dto/user.dto';
+import { JwtGuard } from '../auth/guards/jwt.guard';
 
 @Controller('users')
 export class UsersController {
@@ -58,5 +67,12 @@ export class UsersController {
     await this.usersService.unfollowUser(followerId, followingId);
 
     return { message: 'Unfollowed successfully' };
+  }
+
+  // Get user by username
+  @UseGuards(JwtGuard)
+  @Get('/:username')
+  async getUserByUsername(@Param('username') username: string) {
+    return this.usersService.getUserByUsername(username);
   }
 }
