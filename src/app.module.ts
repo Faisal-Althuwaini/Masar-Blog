@@ -21,7 +21,7 @@ const entitiesPath = __dirname + '/**/*.entity{.ts,.js}';
       host: process.env.DB_HOST,
       port: parseInt(process.env.PORT) || 5432,
       username: process.env.DB_USERNAME,
-      password: '',
+      password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       autoLoadEntities: true,
       entities: [entitiesPath],
