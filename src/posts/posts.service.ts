@@ -7,9 +7,9 @@ import { PostEntity } from './entities/post.entity';
 import { Like } from '../likes/like.entity';
 import { Comment } from '../comments/comment.entity';
 import { User } from '../users/entities/user.entity';
-import { UserDto } from '@src/users/dto/user.dto';
-import { CommentDto } from '@src/comments/dto/comment.dto';
-import { LikeDto } from '@src/likes/dto/like.dto';
+import { UserDto } from '../../src/users/dto/user.dto';
+import { CommentDto } from '../../src/comments/dto/comment.dto';
+import { LikeDto } from '../../src/likes/dto/like.dto';
 import { PageService } from '../filter/PageService';
 import { PaginationFilterDto } from '../filter/PaginationFilterDto';
 

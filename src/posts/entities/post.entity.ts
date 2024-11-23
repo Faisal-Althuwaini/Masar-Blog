@@ -5,9 +5,9 @@ import {
   OneToMany,
   ManyToOne,
 } from 'typeorm';
-import { Comment } from 'src/comments/comment.entity';
-import { Like } from 'src/likes/like.entity';
-import { User } from 'src/users/entities/user.entity';
+import { Comment } from '../../comments/comment.entity';
+import { Like } from '../../likes/like.entity';
+import { User } from '../../users/entities/user.entity';
 
 @Entity('posts')
 export class PostEntity {

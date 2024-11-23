@@ -1,5 +1,5 @@
 import { Like } from '../like.entity';
-import { UserDto } from '@src/users/dto/user.dto';
+import { UserDto } from '../../../src/users/dto/user.dto';
 export class LikeDto {
   id: number;
   user: {

@@ -6,8 +6,8 @@ import {
 import { DataSource, UpdateResult } from 'typeorm';
 import { User } from './entities/user.entity';
 import { UUID } from 'crypto';
-import { FollowsService } from '@src/follows/follows.service';
-import { Follow } from '@src/follows/entities/follow.entity';
+import { FollowsService } from '../follows/follows.service';
+import { Follow } from '../follows/entities/follow.entity';
 import { UserDto } from './dto/user.dto'; // Import the DTO
 
 @Injectable()

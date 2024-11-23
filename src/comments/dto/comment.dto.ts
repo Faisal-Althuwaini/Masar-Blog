@@ -1,4 +1,4 @@
-import { UserDto } from '@src/users/dto/user.dto';
+import { UserDto } from '../../../src/users/dto/user.dto';
 import { Comment } from '../comment.entity';
 export class CommentDto {
   id: number;

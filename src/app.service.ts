@@ -53,8 +53,7 @@ export class AppService {
     return allPosts;
   }
 
-  async getHello(userId: number): Promise<string> {
-    const user: User = await this.usersService.findOneById(userId);
-    return `Hello ${user.firstName}!`;
+  async getHello() {
+    return 'Hello world!';
   }
 }

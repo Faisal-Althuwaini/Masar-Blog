@@ -1,6 +1,5 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, Req } from '@nestjs/common';
 import { AppService } from './app.service';
-import { User } from './auth/decorators/user.decorator';
 import { Public } from './auth/decorators/public.decorator';
 
 @Controller()
@@ -30,7 +29,7 @@ export class AppController {
   }
 
   @Get()
-  async getHello(@User() user): Promise<string> {
-    return await this.appService.getHello(user.id);
+  getHello() {
+    return this.appService.getHello();
   }
 }

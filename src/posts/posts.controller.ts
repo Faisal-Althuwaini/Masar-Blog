@@ -16,11 +16,11 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { DataSource } from 'typeorm';
 import { PostEntity } from './entities/post.entity';
-import { Public } from 'src/auth/decorators/public.decorator';
+import { Public } from '../../src/auth/decorators/public.decorator';
 import { JwtGuard } from '../auth/guards/jwt.guard'; // Adjust the import path as needed
-import { CommentsService } from 'src/comments/comments.service';
-import { LikesService } from 'src/likes/likes.service';
-import { PaginationFilterDto } from '@src/filter/PaginationFilterDto';
+import { CommentsService } from '../../src/comments/comments.service';
+import { LikesService } from '../../src/likes/likes.service';
+import { PaginationFilterDto } from '../../src/filter/PaginationFilterDto';
 
 @Controller('posts')
 export class PostsController {

@@ -1,9 +1,8 @@
-import { UUID } from 'crypto';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { Comment } from 'src/comments/comment.entity';
-import { Like } from 'src/likes/like.entity';
-import { PostEntity } from 'src/posts/entities/post.entity';
-import { Follow } from '@src/follows/entities/follow.entity';
+import { PostEntity } from '../../posts/entities/post.entity';
+import { Follow } from '../../follows/entities/follow.entity';
+import { Comment } from '../../comments/comment.entity';
+import { Like } from '../../likes/like.entity';
 
 @Entity({ name: 'user' })
 export class User {
