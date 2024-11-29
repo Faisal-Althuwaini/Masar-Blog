@@ -55,5 +55,6 @@ export class AppService {
 
   async getHello() {
     return 'Hello world!';
+    //
   }
 }
