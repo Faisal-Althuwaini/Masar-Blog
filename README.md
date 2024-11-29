@@ -10,7 +10,7 @@ This project is a backend application for a Blog built with NestJS. It allows us
 
 ## Deployment URL
 
-Production : https://masar-blog.onrender.com
+Production : https://masar-blog.onrender.com (This isn't working)
 
 Staging : https://masar-blog-staging.onrender.com
 
@@ -114,6 +114,12 @@ response time with users table of 700k rows, before index it was 157ms, after in
 - **POST /generate-users**: Run faker to add posts to every user in the database
   - Query Parameters: `count`
   - Response: `Fake posts generated successfully for all users!`
+
+### Postman Collection
+
+You can find the Postman collection for this API in the following link:
+
+[Download Postman Collection](https://drive.google.com/file/d/1AhWkxEYmnbZZ-lgEzuxCjMsR9hYszbbp/view?usp=sharing)
 
 ## Project setup
 
