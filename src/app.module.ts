@@ -26,6 +26,7 @@ const entitiesPath = __dirname + '/**/*.entity{.ts,.js}';
       autoLoadEntities: true,
       entities: [entitiesPath],
       synchronize: false,
+      migrationsRun: true,
       logging: false,
     }),
 

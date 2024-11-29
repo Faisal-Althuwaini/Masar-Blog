@@ -1,0 +1,27 @@
+name: CI Workflow
+
+# Define the events that will trigger the workflow
+on:
+  push:
+    branches:
+      - master
+      - dev
+
+# Define the jobs that run as part of the workflow
+jobs:
+  notify_slack:
+    # This job runs on the latest Ubuntu environment
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the repository's code
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # Send a notification to Slack when the commit is pushed to `master` or `dev`
+    - name: Send notification to Slack
+      if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev'
+      run: |
+        curl -X POST -H 'Content-type: application/json' \
+        --data "{\"text\":\"New commit pushed to ${GITHUB_REF#refs/heads/} branch! \nCommit: ${GITHUB_SHA}\nMessage: ${{ github.event.head_commit.message }}\nBy: ${GITHUB_ACTOR}\"}" \
+        ${{ secrets.SLACK_WEBHOOK_URL }}
