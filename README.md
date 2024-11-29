@@ -39,6 +39,51 @@ response time with users table of 700k rows, before index it was 157ms, after in
 
 <img src="/sequence-diagram.jpg" alt="My system"/>
 
+## API Endpoints
+
+> **Note:** All endpoints require the `Authorization` header with a valid JWT token, except for the registration and login endpoints.
+
+### Authentication
+
+- **POST /auth/login**: Login
+
+  - Request Body: `{ "username": "string", "password": "string" }`
+  - Response: `{ "access_token": "string" }`
+
+- **POST /auth/register**: Register a new user
+  - Request Body: `{ "firstName": "string", "lastName": "string", "username": "string", "password": "string" }`
+  - Response: `{ "access_token": "string" }`
+
+### Users
+
+- **GET /myProfile**: Get user profile (requires JWT authentication)
+
+  - Response: `{ "user": { "id": "integer", "username": "string", "firstName": "string", "lastName": "string" },`
+    `"followers": [ // List of followers (empty if none)],`
+    ` "following": [ // List of followings (empty if none)]}`
+
+- **GET /users/:id/followers**: Get all followers of a specific user (requires JWT authentication)
+
+  - Response: `[ { "id": "uuid", "email": "string", "firstName": "string", "lastName": "string" } ]`
+
+- **GET /users/:id/following**: Get all users followed by a specific user (requires JWT authentication)
+
+  - Response: `[ { "id": "uuid", "email": "string", "firstName": "string", "lastName": "string" } ]`
+
+- **GET /users/myProfile**: Get the profile of the authenticated user (requires JWT authentication)
+  - Response: `{ "id": "uuid", "email": "string", "firstName": "string", "lastName": "string" }`
+
+### Articles
+
+- **GET /articles**: Get all articles with filtering and sorting options
+  - Query Parameters: `page`, `pageSize`, `orderBy`, `sortOrder`, `title`, `body`
+  - Response: `[ { "id": "number", "title": "string", "body": "string" } ]`
+
+### Seeders
+
+- **POST /seeders**: Run seeders to add default data
+  - Response: `"Seeding complete!"`
+
 ## Project setup
 
 ```bash
