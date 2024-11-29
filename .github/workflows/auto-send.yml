@@ -23,5 +23,5 @@ jobs:
       if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev'
       run: |
         curl -X POST -H 'Content-type: application/json' \
-        --data '{"text":"New commit pushed to '"${GITHUB_REF#refs/heads/}"' branch! \nCommit: '${GITHUB_SHA}'\nMessage: '${GITHUB_EVENT_HEAD_COMMIT_MESSAGE}'\nBy: '${GITHUB_ACTOR}'"}' \
+        --data '{"text":"New commit pushed to '"${GITHUB_REF#refs/heads/}"' branch! \nCommit: '${GITHUB_SHA}'\nMessage: '${github.event.head_commit.message}'\nBy: '${GITHUB_ACTOR}'"}' \
         ${{ secrets.SLACK_WEBHOOK_URL }}
