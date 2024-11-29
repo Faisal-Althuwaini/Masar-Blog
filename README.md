@@ -41,7 +41,7 @@ response time with users table of 700k rows, before index it was 157ms, after in
 
 ## API Endpoints
 
-> **Note:** All endpoints require the `Authorization` header with a valid JWT token, except for the registration and login endpoints.
+> **Note:** All endpoints require the `Authorization` header with a valid JWT token, except for the registration, login and posts endpoints.
 
 ### Authentication
 
@@ -64,25 +64,56 @@ response time with users table of 700k rows, before index it was 157ms, after in
 
 - **GET /users/:id/followers**: Get all followers of a specific user (requires JWT authentication)
 
-  - Response: `[ { "id": "uuid", "email": "string", "firstName": "string", "lastName": "string" } ]`
+  - Response: `[ { "id": "integer", "email": "string", "firstName": "string", "lastName": "string" } ]`
 
 - **GET /users/:id/following**: Get all users followed by a specific user (requires JWT authentication)
 
-  - Response: `[ { "id": "uuid", "email": "string", "firstName": "string", "lastName": "string" } ]`
+  - Response: `[ { "id": "integer", "email": "string", "firstName": "string", "lastName": "string" } ]`
 
-- **GET /users/myProfile**: Get the profile of the authenticated user (requires JWT authentication)
-  - Response: `{ "id": "uuid", "email": "string", "firstName": "string", "lastName": "string" }`
+- **POST /users/follow/:id**: Follows a specific user (requires JWT authentication)
 
-### Articles
+  - Response: `{ "follower": {"id": "integer"}, "following": {"id": "integer"} }`
 
-- **GET /articles**: Get all articles with filtering and sorting options
+- **DELETE /users/unfollow/:id**: Unfollows a specific user (requires JWT authentication)
+
+  - Response: `{"messsage": "Unfollowed successfully"}`
+
+### Posts
+
+- **GET /posts**: Get all posts with filtering and sorting options
+
   - Query Parameters: `page`, `pageSize`, `orderBy`, `sortOrder`, `title`, `body`
-  - Response: `[ { "id": "number", "title": "string", "body": "string" } ]`
+  - Response: `{ "data": [{"id": "integer", "title": "string", "body": "string" }], "totalItems": "integer", "totalPages": "integer", "currentPage": "integer" }`
+
+- **POST /posts**: Create a new post (requires JWT authentication)
+
+  - Request Body: `{ "title": "string", "body": "string" }`
+  - Response: `{    "message": "Post created successfully", `
+    ` "title": "Faisal post testing search",`
+    `  "body": "Faisal" }`
+
+- **DELETE /posts/:id**: Delete post by id (requires JWT authentication)
+
+  - Response: `{"message": "Post and related comments deleted successfully!"}`
+
+- **POST /posts/:id/comments**: Add comment to post (requires JWT authentication)
+
+  - Request Body: `{ "text": "string"}`
+  - Response: `{"message": "Comment added successfully"}`
+
+- **POST /posts/:id/like**: Add like to post (requires JWT authentication)
+  - Response: `{"message": "Like added successfully"}`
 
 ### Seeders
 
-- **POST /seeders**: Run seeders to add default data
-  - Response: `"Seeding complete!"`
+- **POST /generate-users**: Run faker to add fake users to database
+
+  - Query Parameters: `count`
+  - Response: `"integer" Fake users generated successfully!`
+
+- **POST /generate-users**: Run faker to add posts to every user in the database
+  - Query Parameters: `count`
+  - Response: `Fake posts generated successfully for all users!`
 
 ## Project setup
 
