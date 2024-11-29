@@ -59,6 +59,7 @@ export class PostsService extends PageService<PostEntity> {
       message: 'Post created successfully',
       title: savedPost.title,
       body: savedPost.body,
+      id: savedPost.id,
     };
   }
 
