@@ -23,21 +23,21 @@ describe('E2E Tests', () => {
   });
 
   // good
-  // it('Guest user can register', async () => {
-  //   const payload = {
-  //     username: 'guestuser1212',
-  //     firstName: 'Guest',
-  //     lastName: 'User',
-  //     password: 'password123',
-  //   };
-  //   const response = await request(app.getHttpServer())
-  //     .post('/auth/register')
-  //     .send(payload);
-  //   console.log('Response Body:', response.body); // Log the error details
+  it('Guest user can register', async () => {
+    const payload = {
+      username: 'guestuser1212223',
+      firstName: 'Guest',
+      lastName: 'User',
+      password: 'password123',
+    };
+    const response = await request(app.getHttpServer())
+      .post('/auth/register')
+      .send(payload);
+    console.log('Response Body:', response.body); // Log the error details
 
-  //   expect(response.status).toBe(201);
-  //   expect(response.body).toHaveProperty('access_token');
-  // });
+    expect(response.status).toBe(201);
+    expect(response.body).toHaveProperty('access_token');
+  });
 
   // good
   it('Guest user can log in with correct credentials', async () => {
@@ -53,31 +53,31 @@ describe('E2E Tests', () => {
   });
 
   // good
-  // it('Login fails with incorrect credentials', async () => {
-  //   const response = await request(app.getHttpServer())
-  //     .post('/auth/login')
-  //     .send({ email: 'guest@example.com', password: 'wrongpassword' });
-  //   expect(response.status).toBe(401);
-  // });
+  it('Login fails with incorrect credentials', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({ email: 'guest@example.com', password: 'wrongpassword' });
+    expect(response.status).toBe(401);
+  });
 
   // good
-  // it('Guest user can explore articles', async () => {
-  //   const response = await request(app.getHttpServer()).get(
-  //     '/posts?page=1&pageSize=10',
-  //   );
-  //   console.log('Response Body:', response.body); // Log the error details
+  it('Guest user can explore articles', async () => {
+    const response = await request(app.getHttpServer()).get(
+      '/posts?page=1&pageSize=10',
+    );
+    console.log('Response Body:', response.body); // Log the error details
 
-  //   expect(response.status).toBe(200);
-  //   expect(response.body).toBeInstanceOf(Object);
-  // });
+    expect(response.status).toBe(200);
+    expect(response.body).toBeInstanceOf(Object);
+  });
 
   // good
-  // it('Guest user cannot create an article', async () => {
-  //   const response = await request(app.getHttpServer())
-  //     .post('/posts')
-  //     .send({ title: 'New Article', body: 'Content' });
-  //   expect(response.status).toBe(401);
-  // });
+  it('Guest user cannot create an article', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/posts')
+      .send({ title: 'New Article', body: 'Content' });
+    expect(response.status).toBe(401);
+  });
 
   // good
   it('Logged-in user can create a post', async () => {
@@ -92,22 +92,22 @@ describe('E2E Tests', () => {
   });
 
   // good
-  // it('Creating an article fails without a body', async () => {
-  //   const response = await request(app.getHttpServer())
-  //     .post('/posts')
-  //     .set('Authorization', `Bearer ${tokenX}`)
-  //     .send({});
+  it('Creating an article fails without a body', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/posts')
+      .set('Authorization', `Bearer ${tokenX}`)
+      .send({});
 
-  //   expect(response.status).toBe(500);
-  // });
+    expect(response.status).toBe(500);
+  });
 
   // good
-  // it('Follow user functionality works', async () => {
-  //   const response = await request(app.getHttpServer())
-  //     .post('/users/follow/9')
-  //     .set('Authorization', `Bearer ${tokenX}`);
-  //   expect(response.status).toBe(201);
-  // });
+  it('Follow user functionality works', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/users/follow/120')
+      .set('Authorization', `Bearer ${tokenX}`);
+    expect(response.status).toBe(201);
+  });
 
   it('Authorization: User Y cannot edit User X’s article', async () => {
     // to register User Y
