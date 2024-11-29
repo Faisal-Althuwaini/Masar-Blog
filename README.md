@@ -35,6 +35,10 @@ response time with users table of 700k rows, before index it was 157ms, after in
 
 <img src="/system-design.png" alt="My system"/>
 
+### Sequence Diagram of login and register requests
+
+<img src="/sequence-diagram.jpg" alt="My system"/>
+
 ## Project setup
 
 ```bash
