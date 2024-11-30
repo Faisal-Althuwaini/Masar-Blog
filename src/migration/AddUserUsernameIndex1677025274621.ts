@@ -3,7 +3,7 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
 export class AddUserUsernameIndex1677025274621 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
-      CREATE INDEX "findByUserName" ON "public.user" USING HASH ("username");
+      CREATE INDEX "findByUserName" ON "public.users" USING HASH ("username");
     `);
   }
 
