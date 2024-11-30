@@ -1,15 +1,17 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class AddUserUsernameIndex1677025274621 implements MigrationInterface {
+  name = 'AddUserUsernameIndex1677025274621';
+
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`
-      CREATE INDEX "findByUserName" ON "public.users" USING HASH ("username");
-    `);
+    // Add the index after the table is created
+    await queryRunner.query(
+      `CREATE INDEX "findByUserName" ON "public.user" ("username")`,
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`
-      DROP INDEX "findByUserName";
-    `);
+    // Drop the index first before dropping the table
+    await queryRunner.query(`DROP INDEX "findByUserName"`);
   }
 }
