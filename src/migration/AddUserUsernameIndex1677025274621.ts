@@ -6,7 +6,7 @@ export class AddUserUsernameIndex1677025274621 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     // Add the index after the table is created
     await queryRunner.query(
-      `CREATE INDEX "findByUserName" ON "public.user" ("username")`,
+      `CREATE INDEX "findByUserName" ON "user" ("username")`,
     );
   }
 
